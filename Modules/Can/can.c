@@ -8,10 +8,18 @@
 
 #include "Can/can.h"
 #include "leds/leds.h"
+#include "waga/timer.h"
+#include "waga/hx711.h"
+#include "waga/waga.h"
+
+uint8_t initWeight = 0;
+uint8_t initTim = 0;
 
 
 static uint32_t CAN_TxMailbox;
 static uint8_t CAN_RxMsg[8];
+
+hx711_t loadcell;
 
 CAN_RxHeaderTypeDef CAN_RxHeader;
 CAN_TxHeaderTypeDef CAN_TxHeader;
@@ -94,6 +102,18 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan) {
 		{
 			HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_RESET);
 		}
+	}
+
+
+	// TODO ARBITRALNE WARTOSCI DO RAMKI, USTALIC STRUKTURE
+	// flaga do kalibracji wagi
+	else if (CAN_RxHeader.StdId == 61) {
+		if(CAN_RxMsg[0]==1){	// wlacz zegar posylajacy odczyty wagi
+			initTim++;
+		}
+		if(CAN_RxMsg[1]==1){	// resetuj/kalibruj wage
+			initWeight++;
+		}
 	Leds_toggleLed(LED3);
 	}
 
@@ -102,7 +122,7 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan) {
 void HAL_CAN_RxFifo1MsgPendingCallback(CAN_HandleTypeDef *hcan) {
 
 	HAL_CAN_GetRxMessage(&hcan1, CAN_RX_FIFO1, &CAN_RxHeader, CAN_RxMsg);
-	Leds_toggleLed(LED3);
+//	Leds_toggleLed(LED3);
 }
 
 void Can_sendMessage(uint8_t* msg, uint8_t ID)
