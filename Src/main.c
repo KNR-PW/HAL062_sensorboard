@@ -57,6 +57,10 @@ int main(void) {
 
 	TIM7_Init();
 	// Infinity loop
+
+	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_4|GPIO_PIN_5, GPIO_PIN_SET);
+	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_6, GPIO_PIN_SET);
+
 	while (1){
 //		measure_weight(loadcell);
 if(initWeight == 1)

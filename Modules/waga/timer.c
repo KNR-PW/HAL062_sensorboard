@@ -65,10 +65,10 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
 		float weightA = measure_weight(&loadcell);
 		liveWeight = weightA;
 		uint8_t bytes[8];
-		bytes[0] = ((long)weightA & 0xFF000000) >> 24;
-		bytes[1] = ((long)weightA & 0x00FF0000) >> 16;
-		bytes[2] = ((long)weightA & 0x0000FF00) >> 8;
-		bytes[3] = ((long)weightA & 0x000000FF);
+		bytes[0] = (uint8_t)(((unsigned long)weightA & 0xFF000000) >> 24);
+		bytes[1] = (uint8_t)(((unsigned long)weightA & 0x00FF0000) >> 16);
+		bytes[2] = (uint8_t)(((unsigned long)weightA & 0x0000FF00) >> 8);
+		bytes[3] = (uint8_t)(((unsigned long)weightA & 0x000000FF));
 		for(uint8_t i = 4; i<8; i++){
 				bytes[i] = 0;
 			}
